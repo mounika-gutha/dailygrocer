@@ -7,111 +7,224 @@ const cartCount =
 const cartItems =
     document.getElementById("cart-items");
 
-
 let cart = [];
 
+
+/* LOAD PRODUCTS */
 
 async function loadProducts() {
 
     try {
 
-        const response =
-            await fetch(
-                "http://127.0.0.1:5000/api/products"
-            );
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/products"
+        );
 
-        const products =
-            await response.json();
+        if (!response.ok) {
+            throw new Error("Could not load products");
+        }
+
+        const products = await response.json();
 
         productsContainer.innerHTML = "";
+
 
         products.forEach(product => {
 
             const card =
                 document.createElement("div");
 
-            card.className =
-                "product-card";
+            card.className = "product-card";
+
+
+            let options = "";
+
+            product.options.forEach(
+                (option, index) => {
+
+                    options += `
+                        <option value="${index}">
+                            ${option.label} - ₹${option.price}
+                        </option>
+                    `;
+
+                }
+            );
+
 
             card.innerHTML = `
 
-                <h3>
-                    ${product.name}
-                </h3>
+                <h3>${product.name}</h3>
 
                 <p class="category">
                     ${product.category}
                 </p>
 
-                <p class="price">
-                    ₹${product.price}
-                    / ${product.unit}
+                <label>
+                    Choose quantity:
+                </label>
+
+                <select
+                    id="option-${product.id}"
+                    class="quantity-select"
+                >
+                    ${options}
+                </select>
+
+                <p
+                    id="price-${product.id}"
+                    class="price"
+                >
+                    ₹${product.options[0].price}
                 </p>
 
                 <button
                     class="add-button"
-                    onclick='addToCart(${JSON.stringify(product)})'
+                    onclick="addToCart(${product.id})"
                 >
                     Add to Cart
                 </button>
 
             `;
 
+
             productsContainer.appendChild(card);
+
+
+            const select =
+                document.getElementById(
+                    `option-${product.id}`
+                );
+
+            const price =
+                document.getElementById(
+                    `price-${product.id}`
+                );
+
+
+            select.addEventListener(
+                "change",
+                function () {
+
+                    const selected =
+                        product.options[
+                            this.value
+                        ];
+
+                    price.textContent =
+                        `₹${selected.price}`;
+
+                }
+            );
 
         });
 
+
     } catch (error) {
 
-        productsContainer.innerHTML =
-            "<p>Unable to load products.</p>";
-
         console.error(error);
+
+        productsContainer.innerHTML = `
+            <p>
+                Unable to load products.
+            </p>
+        `;
+
     }
 }
 
 
-function addToCart(product) {
+/* ADD TO CART */
 
-    const existingProduct =
-        cart.find(item => item.id === product.id);
+async function addToCart(productId) {
 
-    if (existingProduct) {
+    const response = await fetch(
+        "http://127.0.0.1:5000/api/products"
+    );
 
-        existingProduct.quantity++;
+    const products = await response.json();
+
+
+    const product =
+        products.find(
+            item => item.id === productId
+        );
+
+
+    const select =
+        document.getElementById(
+            `option-${productId}`
+        );
+
+
+    const selectedOption =
+        product.options[
+            select.value
+        ];
+
+
+    const existing =
+        cart.find(
+            item =>
+                item.id === productId &&
+                item.unit === selectedOption.label
+        );
+
+
+    if (existing) {
+
+        existing.quantity++;
 
     } else {
 
         cart.push({
-            ...product,
+
+            id: product.id,
+
+            name: product.name,
+
+            category: product.category,
+
+            unit: selectedOption.label,
+
+            price: selectedOption.price,
+
             quantity: 1
+
         });
 
     }
+
 
     updateCart();
 
 }
 
 
+/* UPDATE CART */
+
 function updateCart() {
 
-    const totalItems =
-        cart.reduce(
-            (total, item) =>
-                total + item.quantity,
-            0
-        );
+    let count = 0;
 
-    cartCount.textContent =
-        totalItems;
+    let total = 0;
 
 
-    if (cart.length === 0) {
+    cart.forEach(item => {
 
-        cartItems.innerHTML =
-            "Your cart is empty.";
+        count += item.quantity;
 
+        total +=
+            item.price *
+            item.quantity;
+
+    });
+
+
+    cartCount.textContent = count;
+
+
+    if (!cartItems) {
         return;
     }
 
@@ -119,41 +232,54 @@ function updateCart() {
     cartItems.innerHTML = "";
 
 
-    let totalPrice = 0;
+    if (cart.length === 0) {
+
+        cartItems.innerHTML =
+            "<p>Your cart is empty.</p>";
+
+        return;
+
+    }
 
 
     cart.forEach(item => {
 
-        const itemTotal =
-            item.price * item.quantity;
-
-        totalPrice += itemTotal;
-
-
-        const cartItem =
+        const div =
             document.createElement("div");
 
-        cartItem.className =
+        div.className =
             "cart-item";
 
 
-        cartItem.innerHTML = `
+        div.innerHTML = `
 
-            <p>
-                <strong>${item.name}</strong>
-            </p>
+            <div>
 
-            <p>
-                Quantity:
-                ${item.quantity}
-            </p>
+                <strong>
+                    ${item.name}
+                </strong>
 
-            <p>
-                ₹${itemTotal}
-            </p>
+                <p>
+                    ${item.unit}
+                </p>
+
+                <p>
+                    Quantity: ${item.quantity}
+                </p>
+
+                <p>
+                    ₹${item.price * item.quantity}
+                </p>
+
+            </div>
 
             <button
-                onclick="removeFromCart(${item.id})"
+                onclick="
+                    removeFromCart(
+                        ${item.id},
+                        '${item.unit}'
+                    )
+                "
             >
                 Remove
             </button>
@@ -161,44 +287,58 @@ function updateCart() {
         `;
 
 
-        cartItems.appendChild(cartItem);
+        cartItems.appendChild(div);
 
     });
 
 
-    const total =
+    const totalElement =
         document.createElement("h3");
 
-    total.textContent =
-        `Total: ₹${totalPrice}`;
+
+    totalElement.textContent =
+        `Total: ₹${total}`;
 
 
-    cartItems.appendChild(total);
+    cartItems.appendChild(
+        totalElement
+    );
 
 }
 
 
-function removeFromCart(productId) {
+/* REMOVE FROM CART */
 
-    const product =
+function removeFromCart(
+    productId,
+    unit
+) {
+
+    const item =
         cart.find(
-            item => item.id === productId
+            product =>
+                product.id === productId &&
+                product.unit === unit
         );
 
 
-    if (!product) {
+    if (!item) {
         return;
     }
 
 
-    product.quantity--;
+    item.quantity--;
 
 
-    if (product.quantity === 0) {
+    if (item.quantity <= 0) {
 
         cart =
             cart.filter(
-                item => item.id !== productId
+                product =>
+                    !(
+                        product.id === productId &&
+                        product.unit === unit
+                    )
             );
 
     }
@@ -209,32 +349,54 @@ function removeFromCart(productId) {
 }
 
 
+/* OPEN CART */
+
 function openCart() {
 
-    document.getElementById("cart-section")
-        .scrollIntoView({
+    const cartSection =
+        document.getElementById(
+            "cart-section"
+        );
+
+
+    if (cartSection) {
+
+        cartSection.scrollIntoView({
             behavior: "smooth"
         });
 
+    }
+
 }
 
+
+/* CHECKOUT */
 
 function checkout() {
 
     if (cart.length === 0) {
 
-        alert("Your cart is empty.");
+        alert(
+            "Your cart is empty."
+        );
 
         return;
+
     }
+
 
     localStorage.setItem(
         "cart",
         JSON.stringify(cart)
     );
 
-    window.location.href = "checkout.html";
+
+    window.location.href =
+        "checkout.html";
+
 }
 
+
+/* START */
 
 loadProducts();

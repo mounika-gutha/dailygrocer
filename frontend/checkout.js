@@ -6,7 +6,9 @@ const checkoutTotal =
 
 
 const cart =
-    JSON.parse(localStorage.getItem("cart")) || [];
+    JSON.parse(
+        localStorage.getItem("cart")
+    ) || [];
 
 
 function displayCheckout() {
@@ -51,6 +53,10 @@ function displayCheckout() {
                 </strong>
 
                 <p>
+                    ${item.unit}
+                </p>
+
+                <p>
                     Quantity: ${item.quantity}
                 </p>
 
@@ -63,7 +69,9 @@ function displayCheckout() {
         `;
 
 
-        checkoutItems.appendChild(itemElement);
+        checkoutItems.appendChild(
+            itemElement
+        );
 
     });
 
@@ -77,65 +85,109 @@ function displayCheckout() {
         </h3>
 
     `;
+
 }
 
 
 displayCheckout();
+
+
+/* =========================
+   SAVE ADDRESS
+========================= */
+
 const addressForm =
-    document.getElementById("address-form");
-
-
-addressForm.addEventListener("submit", function(event) {
-
-    event.preventDefault();
-
-
-    const address = {
-
-        name:
-            document.getElementById("name").value,
-
-        phone:
-            document.getElementById("phone").value,
-
-        house:
-            document.getElementById("house").value,
-
-        building:
-            document.getElementById("building").value,
-
-        area:
-            document.getElementById("area").value,
-
-        street:
-            document.getElementById("street").value,
-
-        landmark:
-            document.getElementById("landmark").value,
-
-        city:
-            document.getElementById("city").value,
-
-        state:
-            document.getElementById("state").value,
-
-        pincode:
-            document.getElementById("pincode").value,
-
-        type:
-            document.querySelector(
-                'input[name="address-type"]:checked'
-            ).value
-
-    };
-
-
-    localStorage.setItem(
-        "deliveryAddress",
-        JSON.stringify(address)
+    document.getElementById(
+        "address-form"
     );
 
 
-    alert("Address saved successfully!");
+if (addressForm) {
 
-});
+    addressForm.addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+
+            const selectedType =
+                document.querySelector(
+                    'input[name="address-type"]:checked'
+                );
+
+
+            const address = {
+
+                name:
+                    document.getElementById(
+                        "name"
+                    ).value,
+
+                phone:
+                    document.getElementById(
+                        "phone"
+                    ).value,
+
+                house:
+                    document.getElementById(
+                        "house"
+                    ).value,
+
+                building:
+                    document.getElementById(
+                        "building"
+                    ).value,
+
+                area:
+                    document.getElementById(
+                        "area"
+                    ).value,
+
+                street:
+                    document.getElementById(
+                        "street"
+                    ).value,
+
+                landmark:
+                    document.getElementById(
+                        "landmark"
+                    ).value,
+
+                city:
+                    document.getElementById(
+                        "city"
+                    ).value,
+
+                state:
+                    document.getElementById(
+                        "state"
+                    ).value,
+
+                pincode:
+                    document.getElementById(
+                        "pincode"
+                    ).value,
+
+                type:
+                    selectedType
+                        ? selectedType.value
+                        : "Home"
+
+            };
+
+
+            localStorage.setItem(
+                "deliveryAddress",
+                JSON.stringify(address)
+            );
+
+
+            alert(
+                "Address saved successfully!"
+            );
+
+        }
+    );
+
+}
