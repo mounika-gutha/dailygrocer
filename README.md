@@ -1,36 +1,57 @@
-# FreshCart Grocery Store
+# 🛒 DailyGrocer
 
-A simple grocery shopping website built for learning frontend, backend, JSON data, Linux, VS Code and Git.
+A simple and colorful grocery shopping website built with HTML, CSS, JavaScript, and Flask.
 
-## Technologies
+## 🌱 Features
 
-- HTML
-- CSS
-- JavaScript
-- Python
-- Flask
-- JSON
+- 🛍️ Browse grocery products
+- ⚖️ Select different product quantities
+- 🛒 Add products to cart
+- 🔢 Increase product quantities
+- ❌ Remove products from cart
+- 📍 Add delivery address
+- 🧾 View order summary
+- 💳 Select payment method
+- 📱 Responsive user interface
+- 💰 Prices displayed in Indian Rupees (₹)
 
-## Products
+## 🛒 Products
 
-- Apple - ₹120 / 1 kg
-- Banana - ₹60 / 1 dozen
-- Orange - ₹100 / 1 kg
-- Milk - ₹60 / 1 litre
-- Bread - ₹45 / 1 pack
-- Eggs - ₹90 / 12 eggs
+DailyGrocer currently contains:
 
-## Project Structure
+- 🍎 Apple
+- 🍌 Banana
+- 🍊 Orange
+- 🥛 Milk
+- 🍞 Bread
+- 🥚 Eggs
+
+Products can have different quantity options such as:
+
+- 250 g
+- 500 g
+- 1 kg
+- 2 kg
+- Pieces
+- Litres
+- Packs
+
+## 🏗️ Project Structure
 
 ```text
 grocery-store/
+│
 ├── backend/
 │   ├── app.py
 │   └── data/
 │       └── products.json
+│
 ├── frontend/
 │   ├── index.html
+│   ├── script.js
 │   ├── style.css
-│   └── script.js
+│   ├── checkout.html
+│   └── checkout.js
+│
 ├── .gitignore
 └── README.md
