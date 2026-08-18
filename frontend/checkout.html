@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Checkout - FreshCart</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <header>
+
+        <div class="logo">
+            FreshCart
+        </div>
+
+        <div class="checkout-title">
+            Checkout
+        </div>
+
+    </header>
+
+
+    <main class="checkout-container">
+
+        <section class="address-section">
+
+            <h2>Delivery Address</h2>
+
+            <form id="address-form">
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Mobile Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        placeholder="Enter your mobile number"
+                        maxlength="10"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="house">
+                            House / Flat No.
+                        </label>
+
+                        <input
+                            type="text"
+                            id="house"
+                            placeholder="House / Flat No."
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="building">
+                            Building / Apartment
+                        </label>
+
+                        <input
+                            type="text"
+                            id="building"
+                            placeholder="Building name"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="area">
+                        Area / Locality
+                    </label>
+
+                    <input
+                        type="text"
+                        id="area"
+                        placeholder="Enter area or locality"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="street">
+                        Street / Road
+                    </label>
+
+                    <input
+                        type="text"
+                        id="street"
+                        placeholder="Enter street or road"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="landmark">
+                        Landmark
+                    </label>
+
+                    <input
+                        type="text"
+                        id="landmark"
+                        placeholder="Nearby landmark (optional)"
+                    >
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="city">
+                            City
+                        </label>
+
+                        <input
+                            type="text"
+                            id="city"
+                            placeholder="City"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="state">
+                            State
+                        </label>
+
+                        <input
+                            type="text"
+                            id="state"
+                            placeholder="State"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="pincode">
+                            PIN Code
+                        </label>
+
+                        <input
+                            type="text"
+                            id="pincode"
+                            placeholder="PIN Code"
+                            maxlength="6"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Address Type
+                    </label>
+
+                    <div class="address-type">
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="address-type"
+                                value="Home"
+                                checked
+                            >
+                            🏠 Home
+                        </label>
+
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="address-type"
+                                value="Work"
+                            >
+                            🏢 Work
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="save-address-button"
+                >
+                    Save Address
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <section class="order-summary">
+
+            <h2>Order Summary</h2>
+
+            <div id="checkout-items">
+                Loading cart...
+            </div>
+
+            <div id="checkout-total">
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="checkout.js"></script>
+
+</body>
+
+</html>

@@ -228,11 +228,12 @@ function checkout() {
         return;
     }
 
-
-    alert(
-        "Checkout successful! Thank you for your order."
+    localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
     );
 
+    window.location.href = "checkout.html";
 }
 
 
