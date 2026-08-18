@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "Apple",
+    "category": "Fruits",
+    "price": 120,
+    "unit": "1 kg"
+  },
+  {
+    "id": 2,
+    "name": "Banana",
+    "category": "Fruits",
+    "price": 60,
+    "unit": "1 dozen"
+  },
+  {
+    "id": 3,
+    "name": "Orange",
+    "category": "Fruits",
+    "price": 100,
+    "unit": "1 kg"
+  },
+  {
+    "id": 4,
+    "name": "Milk",
+    "category": "Dairy",
+    "price": 60,
+    "unit": "1 litre"
+  },
+  {
+    "id": 5,
+    "name": "Bread",
+    "category": "Bakery",
+    "price": 45,
+    "unit": "1 pack"
+  },
+  {
+    "id": 6,
+    "name": "Eggs",
+    "category": "Dairy",
+    "price": 90,
+    "unit": "12 eggs"
+  }
+]
