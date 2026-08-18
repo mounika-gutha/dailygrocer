@@ -4,8 +4,11 @@ const productsContainer =
 const cartCount =
     document.getElementById("cart-count");
 
+const cartItems =
+    document.getElementById("cart-items");
 
-let cart = 0;
+
+let cart = [];
 
 
 async function loadProducts() {
@@ -20,9 +23,7 @@ async function loadProducts() {
         const products =
             await response.json();
 
-
         productsContainer.innerHTML = "";
-
 
         products.forEach(product => {
 
@@ -31,7 +32,6 @@ async function loadProducts() {
 
             card.className =
                 "product-card";
-
 
             card.innerHTML = `
 
@@ -50,13 +50,12 @@ async function loadProducts() {
 
                 <button
                     class="add-button"
-                    onclick="addToCart()"
+                    onclick='addToCart(${JSON.stringify(product)})'
                 >
                     Add to Cart
                 </button>
 
             `;
-
 
             productsContainer.appendChild(card);
 
@@ -72,11 +71,167 @@ async function loadProducts() {
 }
 
 
-function addToCart() {
+function addToCart(product) {
 
-    cart++;
+    const existingProduct =
+        cart.find(item => item.id === product.id);
 
-    cartCount.textContent = cart;
+    if (existingProduct) {
+
+        existingProduct.quantity++;
+
+    } else {
+
+        cart.push({
+            ...product,
+            quantity: 1
+        });
+
+    }
+
+    updateCart();
+
+}
+
+
+function updateCart() {
+
+    const totalItems =
+        cart.reduce(
+            (total, item) =>
+                total + item.quantity,
+            0
+        );
+
+    cartCount.textContent =
+        totalItems;
+
+
+    if (cart.length === 0) {
+
+        cartItems.innerHTML =
+            "Your cart is empty.";
+
+        return;
+    }
+
+
+    cartItems.innerHTML = "";
+
+
+    let totalPrice = 0;
+
+
+    cart.forEach(item => {
+
+        const itemTotal =
+            item.price * item.quantity;
+
+        totalPrice += itemTotal;
+
+
+        const cartItem =
+            document.createElement("div");
+
+        cartItem.className =
+            "cart-item";
+
+
+        cartItem.innerHTML = `
+
+            <p>
+                <strong>${item.name}</strong>
+            </p>
+
+            <p>
+                Quantity:
+                ${item.quantity}
+            </p>
+
+            <p>
+                ₹${itemTotal}
+            </p>
+
+            <button
+                onclick="removeFromCart(${item.id})"
+            >
+                Remove
+            </button>
+
+        `;
+
+
+        cartItems.appendChild(cartItem);
+
+    });
+
+
+    const total =
+        document.createElement("h3");
+
+    total.textContent =
+        `Total: ₹${totalPrice}`;
+
+
+    cartItems.appendChild(total);
+
+}
+
+
+function removeFromCart(productId) {
+
+    const product =
+        cart.find(
+            item => item.id === productId
+        );
+
+
+    if (!product) {
+        return;
+    }
+
+
+    product.quantity--;
+
+
+    if (product.quantity === 0) {
+
+        cart =
+            cart.filter(
+                item => item.id !== productId
+            );
+
+    }
+
+
+    updateCart();
+
+}
+
+
+function openCart() {
+
+    document.getElementById("cart-section")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+function checkout() {
+
+    if (cart.length === 0) {
+
+        alert("Your cart is empty.");
+
+        return;
+    }
+
+
+    alert(
+        "Checkout successful! Thank you for your order."
+    );
 
 }
 
