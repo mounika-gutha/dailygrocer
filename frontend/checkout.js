@@ -191,3 +191,129 @@ if (addressForm) {
     );
 
 }
+/* =========================
+   PLACE ORDER
+========================= */
+
+function placeOrder() {
+
+    if (cart.length === 0) {
+
+        alert("Your cart is empty.");
+
+        return;
+    }
+
+
+    const address =
+        JSON.parse(
+            localStorage.getItem("deliveryAddress")
+        );
+
+
+    if (!address) {
+
+        alert(
+            "Please save your delivery address first."
+        );
+
+        return;
+    }
+
+
+    const payment =
+        document.querySelector(
+            'input[name="payment"]:checked'
+        );
+
+
+    let paymentMethod =
+        "Cash on Delivery";
+
+    let paymentStatus =
+        "Pending";
+
+
+    if (payment) {
+
+        if (payment.value === "upi") {
+
+            paymentMethod = "UPI";
+
+            // Dummy payment
+            paymentStatus = "Paid";
+
+        } else if (payment.value === "card") {
+
+            paymentMethod = "Card";
+
+            // Dummy payment
+            paymentStatus = "Paid";
+
+        }
+
+    }
+
+
+    const orderTotal =
+        cart.reduce(
+            (total, item) =>
+                total +
+                item.price *
+                item.quantity,
+            0
+        );
+
+
+    const order = {
+
+        orderId:
+            "DG" +
+            Date.now(),
+
+        items: cart,
+
+        address: address,
+
+        paymentMethod:
+            paymentMethod,
+
+        paymentStatus:
+            paymentStatus,
+
+        orderStatus:
+            "Confirmed",
+
+        total:
+            orderTotal,
+
+        orderDate:
+            new Date().toLocaleString()
+
+    };
+
+
+    localStorage.setItem(
+        "lastOrder",
+        JSON.stringify(order)
+    );
+
+
+    // Clear cart
+
+    localStorage.removeItem("cart");
+
+
+    // Show confirmation
+
+    alert(
+        "Order placed successfully! 🎉\n\n" +
+        "Order ID: " +
+        order.orderId
+    );
+
+
+    window.location.href =
+        "index.html";
+
+}
