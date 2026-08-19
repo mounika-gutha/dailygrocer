@@ -4,12 +4,17 @@ const checkoutItems =
 const checkoutTotal =
     document.getElementById("checkout-total");
 
+const addressForm =
+    document.getElementById("address-form");
+
 
 const cart =
-    JSON.parse(
-        localStorage.getItem("cart")
-    ) || [];
+    JSON.parse(localStorage.getItem("cart")) || [];
 
+
+// =========================
+// DISPLAY CHECKOUT
+// =========================
 
 function displayCheckout() {
 
@@ -45,27 +50,19 @@ function displayCheckout() {
 
 
         itemElement.innerHTML = `
-
             <div>
+                <strong>${item.name}</strong>
 
-                <strong>
-                    ${item.name}
-                </strong>
-
-                <p>
-                    ${item.unit}
-                </p>
+                <p>${item.unit}</p>
 
                 <p>
                     Quantity: ${item.quantity}
                 </p>
-
             </div>
 
             <strong>
                 ₹${itemTotal}
             </strong>
-
         `;
 
 
@@ -77,30 +74,15 @@ function displayCheckout() {
 
 
     checkoutTotal.innerHTML = `
-
         <hr>
-
-        <h3>
-            Total: ₹${total}
-        </h3>
-
+        <h3>Total: ₹${total}</h3>
     `;
-
 }
 
 
-displayCheckout();
-
-
-/* =========================
-   SAVE ADDRESS
-========================= */
-
-const addressForm =
-    document.getElementById(
-        "address-form"
-    );
-
+// =========================
+// SAVE ADDRESS
+// =========================
 
 if (addressForm) {
 
@@ -111,7 +93,69 @@ if (addressForm) {
             event.preventDefault();
 
 
-            const selectedType =
+            const name =
+                document.getElementById("name")
+                    .value.trim();
+
+            const phone =
+                document.getElementById("phone")
+                    .value.trim();
+
+            const house =
+                document.getElementById("house")
+                    .value.trim();
+
+            const building =
+                document.getElementById("building")
+                    .value.trim();
+
+            const area =
+                document.getElementById("area")
+                    .value.trim();
+
+            const street =
+                document.getElementById("street")
+                    .value.trim();
+
+            const landmark =
+                document.getElementById("landmark")
+                    .value.trim();
+
+            const city =
+                document.getElementById("city")
+                    .value.trim();
+
+            const state =
+                document.getElementById("state")
+                    .value.trim();
+
+            const pincode =
+                document.getElementById("pincode")
+                    .value.trim();
+
+
+            // Validate required fields
+
+            if (
+                name === "" ||
+                phone === "" ||
+                house === "" ||
+                area === "" ||
+                street === "" ||
+                city === "" ||
+                state === "" ||
+                pincode === ""
+            ) {
+
+                alert(
+                    "Please enter all required address details."
+                );
+
+                return;
+            }
+
+
+            const addressType =
                 document.querySelector(
                     'input[name="address-type"]:checked'
                 );
@@ -119,63 +163,35 @@ if (addressForm) {
 
             const address = {
 
-                name:
-                    document.getElementById(
-                        "name"
-                    ).value,
+                name: name,
 
-                phone:
-                    document.getElementById(
-                        "phone"
-                    ).value,
+                phone: phone,
 
-                house:
-                    document.getElementById(
-                        "house"
-                    ).value,
+                house: house,
 
-                building:
-                    document.getElementById(
-                        "building"
-                    ).value,
+                building: building,
 
-                area:
-                    document.getElementById(
-                        "area"
-                    ).value,
+                area: area,
 
-                street:
-                    document.getElementById(
-                        "street"
-                    ).value,
+                street: street,
 
-                landmark:
-                    document.getElementById(
-                        "landmark"
-                    ).value,
+                landmark: landmark,
 
-                city:
-                    document.getElementById(
-                        "city"
-                    ).value,
+                city: city,
 
-                state:
-                    document.getElementById(
-                        "state"
-                    ).value,
+                state: state,
 
-                pincode:
-                    document.getElementById(
-                        "pincode"
-                    ).value,
+                pincode: pincode,
 
                 type:
-                    selectedType
-                        ? selectedType.value
+                    addressType
+                        ? addressType.value
                         : "Home"
 
             };
 
+
+            // Save address
 
             localStorage.setItem(
                 "deliveryAddress",
@@ -184,42 +200,58 @@ if (addressForm) {
 
 
             alert(
-                "Address saved successfully!"
+                "Address saved successfully! ✅"
             );
 
         }
     );
 
 }
-/* =========================
-   PLACE ORDER
-========================= */
+
+
+// =========================
+// PLACE ORDER
+// =========================
 
 function placeOrder() {
 
+    // Check cart
+
     if (cart.length === 0) {
 
-        alert("Your cart is empty.");
+        alert(
+            "Your cart is empty."
+        );
+
+        return;
+    }
+
+
+    // Get saved address
+
+    const savedAddress =
+        localStorage.getItem(
+            "deliveryAddress"
+        );
+
+
+    // No saved address
+
+    if (!savedAddress) {
+
+        alert(
+            "Please enter and save your delivery address first."
+        );
 
         return;
     }
 
 
     const address =
-        JSON.parse(
-            localStorage.getItem("deliveryAddress")
-        );
+        JSON.parse(savedAddress);
 
 
-    if (!address) {
-
-        alert(
-            "Please save your delivery address first."
-        );
-
-        return;
-    }
-
+    // Payment method
 
     const payment =
         document.querySelector(
@@ -243,7 +275,9 @@ function placeOrder() {
             // Dummy payment
             paymentStatus = "Paid";
 
-        } else if (payment.value === "card") {
+        }
+
+        else if (payment.value === "card") {
 
             paymentMethod = "Card";
 
@@ -255,25 +289,32 @@ function placeOrder() {
     }
 
 
-    const orderTotal =
-        cart.reduce(
-            (total, item) =>
-                total +
-                item.price *
-                item.quantity,
-            0
-        );
+    // Calculate total
 
+    let total = 0;
+
+
+    cart.forEach(item => {
+
+        total +=
+            item.price *
+            item.quantity;
+
+    });
+
+
+    // Create order
 
     const order = {
 
         orderId:
-            "DG" +
-            Date.now(),
+            "DG" + Date.now(),
 
-        items: cart,
+        items:
+            cart,
 
-        address: address,
+        address:
+            address,
 
         paymentMethod:
             paymentMethod,
@@ -285,13 +326,15 @@ function placeOrder() {
             "Confirmed",
 
         total:
-            orderTotal,
+            total,
 
         orderDate:
             new Date().toLocaleString()
 
     };
 
+
+    // Save order
 
     localStorage.setItem(
         "lastOrder",
@@ -301,10 +344,12 @@ function placeOrder() {
 
     // Clear cart
 
-    localStorage.removeItem("cart");
+    localStorage.removeItem(
+        "cart"
+    );
 
 
-    // Show confirmation
+    // Success message
 
     alert(
         "Order placed successfully! 🎉\n\n" +
@@ -313,7 +358,16 @@ function placeOrder() {
     );
 
 
+    // Go to home
+
     window.location.href =
         "index.html";
 
 }
+
+
+// =========================
+// START
+// =========================
+
+displayCheckout();
