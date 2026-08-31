@@ -5,6 +5,8 @@ name: Deploy DailyGrocer Frontend
 on:
   push:
     branches: ["feature/grocery-store"]
+  pull_request:
+    branches: ["feature/grocery-store"]
 
   workflow_dispatch:
 
