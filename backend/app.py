@@ -18,7 +18,11 @@ def home():
     return jsonify({
         "message": "Grocery Store API is running"
     })
-
+@app.route("/health")
+def health():
+    return jsonify({
+        "status": "healthy"
+    }), 200
 
 @app.route("/api/products")
 def get_products():
