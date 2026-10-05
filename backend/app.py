@@ -1,10 +1,18 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import json
 import os
+import logging
 
 app = Flask(__name__)
 CORS(app)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s"
+)
+
+logger = logging.getLogger(__name__)
 
 DATA_FILE = os.path.join(
     os.path.dirname(__file__),
@@ -12,7 +20,14 @@ DATA_FILE = os.path.join(
     "products.json"
 )
 
-
+@app.before_request
+def log_request():
+    logger.info(
+        "Request: %s %s",
+        request.method,
+        request.path
+    )
+    
 @app.route("/")
 def home():
     return jsonify({
