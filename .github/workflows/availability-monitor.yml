@@ -1,0 +1,24 @@
+name: DailyGrocer Availability Monitor
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check DailyGrocer backend
+        run: |
+          echo "Checking DailyGrocer backend..."
+
+          curl --fail \
+            --silent \
+            --show-error \
+            --max-time 20 \
+            https://dailygrocer-otui.onrender.com/health
+
+          echo ""
+          echo "DailyGrocer backend is healthy!"
