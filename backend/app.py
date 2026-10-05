@@ -30,8 +30,7 @@ def get_products():
         products = json.load(file)
 
     return jsonify(products)
-print("REGISTERED ROUTES:")
-print(app.url_map)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
