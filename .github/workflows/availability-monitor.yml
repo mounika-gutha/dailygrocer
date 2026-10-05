@@ -22,3 +22,9 @@ jobs:
 
           echo ""
           echo "DailyGrocer backend is healthy!"
+
+      - name: Availability check failed
+        if: failure()
+        run: |
+          echo "ALERT: DailyGrocer backend is unavailable!"
+          exit 1
