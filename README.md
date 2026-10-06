@@ -1,6 +1,4 @@
-Yes. From now on, when I give you a README, I’ll give you the **entire README in one single Markdown code block**, with no separate code blocks inside it.
 
-```markdown
 # DailyGrocer – Monitoring and Observability Platform
 
 [![CI](https://github.com/mounika-gutha/dailygrocer/actions/workflows/ci.yml/badge.svg)](https://github.com/mounika-gutha/dailygrocer/actions/workflows/ci.yml)
